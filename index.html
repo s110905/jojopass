@@ -1,74 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>入園報到</title>
+  <meta charset="UTF-8">
+  <title>JOJO ZOO PASS 報到頁面</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; background: #f3f3f3; }
-    h1 { color: #2c3e50; }
-    label { display: block; margin-top: 1rem; }
-    input[type="text"], input[type="date"] {
-      width: 100%; padding: 0.5rem; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc;
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      background: #f4f4f4;
     }
-    button {
-      margin-top: 1.5rem; padding: 0.75rem 1.5rem; font-size: 1rem;
-      background-color: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;
+    form {
+      background: #fff;
+      padding: 2em;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .success { color: green; margin-top: 1rem; }
+    label {
+      display: block;
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.6em;
+      margin-bottom: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    input[type="submit"] {
+      background: #61a8d7;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    input[type="submit"]:hover {
+      background: #4c92c1;
+    }
+    .success {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
+  <form action="https://docs.google.com/forms/d/e/1FAIpQLSf1fBPonGeoETLOjyWKmdpAQrhP9F07ID8lz8xnL-Zh1bUYrQ/formResponse"
+        method="POST" target="hidden_iframe" onsubmit="document.getElementById('msg').style.display='block'">
+    <label>護照編號：</label>
+    <input name="entry.159655196" placeholder="例：001" required>
 
-  <h1>遊園護照報到</h1>
+    <label>姓名：</label>
+    <input name="entry.1028821517" placeholder="例：張文豪" required>
 
-  <form id="reportForm">
-    <label for="code">編號：</label>
-    <input type="text" id="code" name="entry.159655196" required />
+    <label>購買日期：</label>
+    <input name="entry.823871012" type="date" required>
 
-    <label for="name">姓名：</label>
-    <input type="text" id="name" name="entry.1028821517" required />
-
-    <label for="date">購買日期：</label>
-    <input type="date" id="date" name="entry.823871012" required />
-
-    <button type="submit">確認入園</button>
+    <input type="submit" value="📩 登記入園">
   </form>
 
-  <div class="success" id="successMessage" style="display: none;">
-    ✅ 入園成功！
-  </div>
-
+  <div class="success" id="msg" style="display:none;">✅ 報到完成，歡迎入園！</div>
   <iframe name="hidden_iframe" style="display:none;"></iframe>
-
-  <script>
-    // 自動從網址帶入欄位
-    function getParams() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.has('id')) document.getElementById('code').value = decodeURIComponent(params.get('id'));
-      if (params.has('name')) document.getElementById('name').value = decodeURIComponent(params.get('name'));
-      if (params.has('date')) document.getElementById('date').value = decodeURIComponent(params.get('date'));
-    }
-
-    getParams();
-
-    const form = document.getElementById("reportForm");
-    const successMsg = document.getElementById("successMessage");
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-      const queryString = new URLSearchParams(formData).toString();
-
-      const formAction = "https://docs.google.com/forms/d/e/1FAIpQLSf1fBPonGeoETLOjyWKmdpAQrhP9F07ID8lz8xnL-Zh1bUYrQ/formResponse?" + queryString;
-
-      fetch(formAction, { method: "POST", mode: "no-cors" })
-        .then(() => {
-          form.reset();
-          successMsg.style.display = "block";
-        });
-    });
-  </script>
 </body>
 </html>
