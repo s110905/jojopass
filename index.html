@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>入園報到</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f3f3f3; }
+    h1 { color: #2c3e50; }
+    label { display: block; margin-top: 1rem; }
+    input[type="text"], input[type="date"] {
+      width: 100%; padding: 0.5rem; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 1.5rem; padding: 0.75rem 1.5rem; font-size: 1rem;
+      background-color: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;
+    }
+    .success { color: green; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+
+  <h1>遊園護照報到</h1>
+
+  <form id="reportForm">
+    <label for="code">編號：</label>
+    <input type="text" id="code" name="entry.159655196" required />
+
+    <label for="name">姓名：</label>
+    <input type="text" id="name" name="entry.1028821517" required />
+
+    <label for="date">購買日期：</label>
+    <input type="date" id="date" name="entry.823871012" required />
+
+    <button type="submit">確認入園</button>
+  </form>
+
+  <div class="success" id="successMessage" style="display: none;">
+    ✅ 入園成功！
+  </div>
+
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+  <script>
+    // 自動從網址帶入欄位
+    function getParams() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('id')) document.getElementById('code').value = decodeURIComponent(params.get('id'));
+      if (params.has('name')) document.getElementById('name').value = decodeURIComponent(params.get('name'));
+      if (params.has('date')) document.getElementById('date').value = decodeURIComponent(params.get('date'));
+    }
+
+    getParams();
+
+    const form = document.getElementById("reportForm");
+    const successMsg = document.getElementById("successMessage");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const queryString = new URLSearchParams(formData).toString();
+
+      const formAction = "https://docs.google.com/forms/d/e/1FAIpQLSf1fBPonGeoETLOjyWKmdpAQrhP9F07ID8lz8xnL-Zh1bUYrQ/formResponse?" + queryString;
+
+      fetch(formAction, { method: "POST", mode: "no-cors" })
+        .then(() => {
+          form.reset();
+          successMsg.style.display = "block";
+        });
+    });
+  </script>
+</body>
+</html>
